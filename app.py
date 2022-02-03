@@ -9,26 +9,38 @@ def read_base64data(input_path: str) -> str:
         return f.read()
 
 
-def base64_txt_to_array(base64data: str, array_number):
+def base64_txt_to_array(data: str, array_number):
     print(array_number)
     n = 255
-    ll = [base64data[index: index + n] for index in range(0, len(base64data), n)]
-    array = np.array(ll)
-    return (array[int(array_number)])
+    ll = [data[index: index + n] for index in range(0, len(data), n)]
+    arr = np.array(ll)
+    return (arr[int(array_number)])
 
 
 if __name__ == '__main__':
-    EncodeAndTrim()
+    token_name = "someTokenName1"
+    sending_address = "someAddress1"
+    serial_number = "someSerialNumber1"
+    token_url = "someTokenUrl"
 
+
+    EncodeAndTrim()
     commands = Commands()
 
+
     # from here onwards is just tmp code to test it works ...
+    # this needs to be refactored
+
     data = read_base64data(DataMeta.output_path)
-
     array_number = 0
-
-    while array_number <= 9000:
+    while array_number < 57: # IndexError: index 57 is out of bounds for axis 0 with size 57
         data_packet = base64_txt_to_array(data, array_number)
+        commands.create_omni_command_d1(sending_address, data_packet)
+        array_number += 1
+        data_packet = base64_txt_to_array(data, array_number)
+        commands.create_omni_command_d2(data_packet)
+        array_number += 1
+        data_packet = base64_txt_to_array(data, array_number)
+        commands.create_omni_command_d3(token_name, serial_number, token_url, data_packet)
         array_number += 1
 
-        # I got an error here
